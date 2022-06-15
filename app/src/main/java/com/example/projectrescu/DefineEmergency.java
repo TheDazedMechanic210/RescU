@@ -154,7 +154,6 @@ public class DefineEmergency extends AppCompatActivity{
         });
     }
 
-
     public boolean checkphonenumbers(){
         if(eP.getText().toString().equals("")||eP2.getText().toString().equals("")||eP3.getText().toString().equals("")){
             return false;

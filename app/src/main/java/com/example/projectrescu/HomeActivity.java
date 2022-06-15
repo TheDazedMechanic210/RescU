@@ -62,10 +62,10 @@ public class HomeActivity extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationProviderClient;
     Map<String, String> numDict  = new HashMap<String, String>();
     String filename = "dataFile.srl";
-
     TextView outp;
     public static String st;
     FloatingActionButton button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +87,8 @@ public class HomeActivity extends AppCompatActivity {
         }
         catch (IOException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -95,19 +96,16 @@ public class HomeActivity extends AppCompatActivity {
         lsView = (ListView) findViewById(R.id.lvItems);
         if(emergencies!=null){
             itemsAdapter = new EmergencyAdapter(this,emergencies);
-
         }
 
         lsView.setAdapter(itemsAdapter);
         button = findViewById(R.id.button);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
-                HomeActivity.this
-        );
-
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(HomeActivity.this);
         if (ActivityCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             getCurrentLocation();
-        }else{
+        }
+        else{
             ActivityCompat.requestPermissions(HomeActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION} , 100);
         }
     }
@@ -172,7 +170,6 @@ public class HomeActivity extends AppCompatActivity {
                 smsManager.sendTextMessage(m.getKey(),null,m.getValue(),null,null);
             }
         }
-
         Toast.makeText(getApplicationContext(), "SMS sent.",
                 Toast.LENGTH_LONG).show();
     }
@@ -186,41 +183,34 @@ public class HomeActivity extends AppCompatActivity {
         message = message + System.lineSeparator() +"Location of person : - "+ st;
         String[] phoneNumbers = phoneNums.split(" ",0);
         AddToDict(message,phoneNumbers);
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.SEND_SMS)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.SEND_SMS)) {
-                } else {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.SEND_SMS},
-                            0);
                 }
-        }
+                else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 0);
+                }
+            }
             else{
                 sendTexts();
             }
-
     }
-@Override
-public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-    switch (requestCode) {
-        case 0: {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                sendTexts();
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 0: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    sendTexts();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
                 return;
+                }
             }
         }
     }
-
-}
-
-
 
 }
